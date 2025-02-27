@@ -1,5 +1,5 @@
 
-# 🔹 Create VPC
+# Create VPC
 resource "aws_vpc" "qa_vpc" {
   cidr_block = "10.0.0.0/16"
 
@@ -8,7 +8,7 @@ resource "aws_vpc" "qa_vpc" {
   }
 }
 
-# 🔹 Create Two Subnets (in different AZs)
+# Create Two Subnets (in different AZs)
 resource "aws_subnet" "qa_subnet_1" {
   vpc_id            = aws_vpc.qa_vpc.id
   cidr_block        = "10.0.10.0/24"
@@ -29,7 +29,7 @@ resource "aws_subnet" "qa_subnet_2" {
   }
 }
 
-# 🔹 Create an Internet Gateway for Public Access
+# Create an Internet Gateway for Public Access
 resource "aws_internet_gateway" "qa_gw" {
   vpc_id = aws_vpc.qa_vpc.id
 
@@ -38,7 +38,7 @@ resource "aws_internet_gateway" "qa_gw" {
   }
 }
 
-# 🔹 Route Table for Public Subnet
+# Route Table for Public Subnet
 resource "aws_route_table" "qa_route_table" {
   vpc_id = aws_vpc.qa_vpc.id
 
@@ -52,7 +52,7 @@ resource "aws_route_table" "qa_route_table" {
   }
 }
 
-# 🔹 Associate Subnet with Route Table
+# Associate Subnet with Route Table
 resource "aws_route_table_association" "qa_assoc_1" {
   subnet_id      = aws_subnet.qa_subnet_1.id
   route_table_id = aws_route_table.qa_route_table.id
@@ -63,7 +63,7 @@ resource "aws_route_table_association" "qa_assoc_2" {
   route_table_id = aws_route_table.qa_route_table.id
 }
 
-# 🔹 Security Group for EC2 & RDS
+# Security Group for EC2 & RDS
 resource "aws_security_group" "qa_sg" {
   vpc_id = aws_vpc.qa_vpc.id
 
@@ -96,7 +96,7 @@ resource "aws_security_group" "qa_sg" {
   }
 }
 
-# 🔹 Get Latest Amazon Linux 2 AMI
+# Get Latest Amazon Linux 2 AMI
 data "aws_ami" "latest_amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -120,7 +120,7 @@ resource "aws_instance" "qa_server" {
 }
 
 
-# 🔹 DB Subnet Group (Needs 2 AZs)
+# DB Subnet Group (Needs 2 AZs)
 resource "aws_db_subnet_group" "qa_db_subnet_group" {
   name       = "qa-db-subnet-group"
   subnet_ids = [aws_subnet.qa_subnet_1.id, aws_subnet.qa_subnet_2.id]
@@ -130,7 +130,7 @@ resource "aws_db_subnet_group" "qa_db_subnet_group" {
   }
 }
 
-# 🔹 RDS Database Instance
+# RDS Database Instance
 resource "aws_db_instance" "qa_db" {
   identifier            = "qa-${terraform.workspace}-db"
   engine                = "mysql"
