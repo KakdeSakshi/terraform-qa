@@ -112,7 +112,7 @@ resource "aws_instance" "qa_server" {
   ami                    = data.aws_ami.latest_amazon_linux.id
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.qa_subnet_1.id
-  vpc_security_group_ids = [aws_security_group.qa_sg.id]  # ✅ Correct way
+  vpc_security_group_ids = [aws_security_group.qa_sg.id]  
 
   tags = {
     Name = "qa-${terraform.workspace}-server"
@@ -122,13 +122,14 @@ resource "aws_instance" "qa_server" {
 
 # DB Subnet Group (Needs 2 AZs)
 resource "aws_db_subnet_group" "qa_db_subnet_group" {
-  name       = "qa-db-subnet-group"
+  name       = "qa-${terraform.workspace}-db-subnet-group"  # Unique name per workspace
   subnet_ids = [aws_subnet.qa_subnet_1.id, aws_subnet.qa_subnet_2.id]
 
   tags = {
-    Name = "qa-db-subnet-group"
+    Name = "qa-${terraform.workspace}-db-subnet-group"
   }
 }
+
 
 # RDS Database Instance
 resource "aws_db_instance" "qa_db" {
@@ -142,6 +143,9 @@ resource "aws_db_instance" "qa_db" {
   db_subnet_group_name   = aws_db_subnet_group.qa_db_subnet_group.name
   skip_final_snapshot   = true
   publicly_accessible   = false
+
+  # Clone from dev-db-clone
+  snapshot_identifier = var.db_source
 
   tags = {
     Name = "qa-db"

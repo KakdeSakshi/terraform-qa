@@ -1,11 +1,13 @@
 
-terraform {
-  backend "s3" {
-    bucket         = "myawsbucket-1015"  
-    key            = "qa/terraform.tfstate"         # Path in the bucket where the state file is stored
-    region         = "us-east-1"                    # Change this to your AWS region
-    dynamodb_table = "terraform-lock"               # DynamoDB table to enable state locking
-    encrypt        = true                           # Encrypts state file for security
-    workspace_key_prefix = "workspaces"            # Enables Terraform workspaces for multiple environments
-  }
-}
+#terraform {
+  #backend "s3" {
+    #bucket         = "myawsbucket-1015"  
+    #key            = "workspaces/${terraform.workspace}/terraform.tfstate"        
+    
+    #region         = "us-east-1"                    
+    #dynamodb_table = "terraform-lock"              
+   # encrypt        = true                           
+  #  workspace_key_prefix = "workspaces"            
+ # }
+#}
+
